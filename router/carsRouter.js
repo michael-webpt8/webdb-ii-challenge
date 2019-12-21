@@ -116,8 +116,4 @@ router.delete('/:id', async (req, res, next) => {
   }
 });
 
-//  const carId = await db('cars')
-//    .where({ id: req.params.id })
-//    .del();
-
 module.exports = router;
