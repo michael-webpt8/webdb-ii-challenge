@@ -24,7 +24,7 @@ router.get('/', async (req, res) => {
  * Endpoint: `/cars`
  * Description: Create rest endpoint for cars with
  * INSERT INTO `cars` req.body WHERE id = 'ids';
- * SELECT * FROM `cars` WHERE id = 'ids' LIMIT 1;
+ * SELECT * FROM `cars` WHERE id = (promise id) LIMIT 1;
  */
 router.post('/', async (req, res, next) => {
   try {
@@ -38,5 +38,29 @@ router.post('/', async (req, res, next) => {
     next(err);
   }
 });
+
+/**
+ * UPDATE
+ * Endpoint: `/cars/:id`
+ * description: update car item
+ * INSERT INTO `cars` (value...name) VALUES (...value...names);
+ * SELECT * FROM `cars` WHERE id = (promise id) LIMIT 1;
+ */
+router.put('/:id', async (req, res, next) => {
+  try {
+    const carId = await db('cars').insert(req.body);
+    const newCar = await db('cars')
+      .where({ id: carId[0] })
+      .first();
+
+    res.json(201).json(newCar);
+  } catch (err) {
+    next(err);
+  }
+});
+
+//  const carId = await db('cars')
+//    .where({ id: req.params.id })
+//    .del();
 
 module.exports = router;
