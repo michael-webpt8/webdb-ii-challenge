@@ -1,14 +1,18 @@
 exports.up = async function(knex) {
-  knex.schema.createTable('sales', tables => {
-    tables.increments('sales_id');
-    tables.boolean('sold').nullable();
-    tables.string('sold_to', 150).notNullable();
-    tables.string('sold_by', 150).notNullable();
-    tables.decimal('list_price').notNullable();
-    tables.decimal('sold_price').notNullable();
+  return knex.schema.createTable('sales', table => {
+    table.increments('sales_id');
+    table.boolean('sold').nullable();
+    table.string('sold_to', 150).notNullable();
+    table.string('sold_by', 150).notNullable();
+    table.decimal('list_price').nullable();
+    table.decimal('sold_price').nullable();
+    table
+      .foreign('sales_id')
+      .references('sales_id')
+      .inTable('cars');
   });
 };
 
 exports.down = function(knex) {
-  knex.schema.dropTableIfExists('sales');
+  return knex.schema.dropTableIfExists('sales');
 };

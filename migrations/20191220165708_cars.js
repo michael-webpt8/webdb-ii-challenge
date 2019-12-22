@@ -1,5 +1,5 @@
 exports.up = async function(knex) {
-  await knex.schema.createTable('cars', table => {
+  return knex.schema.createTable('cars', table => {
     table.increments('id');
     table
       .string('vin', 17)
@@ -13,9 +13,10 @@ exports.up = async function(knex) {
       .defaultTo(0);
     table.string('transmission_type', 75).nullable();
     table.string('title_status', 45).nullable();
+    table.integer('sales_id').unique();
   });
 };
 
 exports.down = async function(knex) {
-  await knex.schema.dropTableIfExists('cars');
+  return knex.schema.dropTableIfExists('cars');
 };
