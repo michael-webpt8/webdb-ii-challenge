@@ -1,8 +1,11 @@
 const express = require('express');
 const helmet = require('helmet');
 const db = require('../utils/db');
+const salesRouter = require('../router/salesRouter');
 
 const router = express.Router();
+
+router.use('/', salesRouter);
 
 /**
  * GET
@@ -10,9 +13,9 @@ const router = express.Router();
  * Description: Read end point for
  * SELECT * FROM `cars`;
  */
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
-    const cars = await db
+    const car = await db
       .select(
         'id',
         'vin',
@@ -23,7 +26,7 @@ router.get('/', async (req, res) => {
         'title_status'
       )
       .from('cars');
-    res.json(cars);
+    res.json(car);
   } catch (err) {
     next(err);
   }
