@@ -4,7 +4,7 @@ const carsRouter = require('./router/carsRouter');
 
 const server = express();
 const host = process.env.HOST || 'localhost';
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4000;
 
 server.use(helmet());
 server.use(express.json());
