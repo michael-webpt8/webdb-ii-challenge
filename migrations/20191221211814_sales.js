@@ -1,10 +1,6 @@
 exports.up = async function(knex) {
   return knex.schema.createTable('sales', table => {
-    table.increments('id');
-    table
-      .integer('sales_id')
-      .unique()
-      .notNullable();
+    table.increments('sales_id');
     table.boolean('sold').notNullable();
     table.string('sold_to', 150).nullable();
     table.string('sold_by', 150).nullable();
