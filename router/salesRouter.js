@@ -22,9 +22,10 @@ router.get('/:id/sales', async (req, res, next) => {
   try {
     res.json(
       await db('sales').select(
-        SOLD,
+        'sales_id', // just sticking in right now for testing.
+        { sold: SOLD }, // `SOLD as sold`
         { Seller: SOLD_BY }, // `sold_by as Seller`
-        { Buyer: SOLD_TO }, // `sold_to as Buyer`
+        { Purchaser: SOLD_TO }, // `sold_to as Buyer`
         { ListingPrice: LIST_PRICE }, // `list_price as ListingPrice`
         { PriceSoldAt: SOLD_PRICE } // `sold_price as PriceSoldAt`
       )
@@ -45,7 +46,7 @@ router.post('/:id/sales', async (req, res, next) => {
       sold_to: req.body.sold_to,
       sold_by: req.body.sold_by,
       list_price: req.body.list_price || null,
-      sold_price: req.body.sold_price || null
+      sold_price: req.body.sold_price || null,
     };
 
     const [id] = await db('sales')
@@ -54,6 +55,29 @@ router.post('/:id/sales', async (req, res, next) => {
     res.status(201).json(
       await db('sales')
         .where({ sales_id: id })
+        .select(SOLD, SOLD_TO, SOLD_BY, LIST_PRICE, SOLD_PRICE)
+        .first()
+    );
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.put('/:salesId/sales', async (req, res, next) => {
+  try {
+    const updatePayload = {
+      sold: req.body.sold, // i think sold should be a must on update.
+      sold_by: req.body.sold_by || null,
+      sold_to: req.body.sold_to || null,
+      list_price: req.body.list_price, // is required NOT NULL CONSTRAINT.
+      sold_price: req.body.sold_price || null,
+    };
+    await db('sales')
+      .where({ sales_id: req.params.salesId })
+      .update(updatePayload);
+    res.json(
+      await db('sales')
+        .where({ sales_id: req.params.id })
         .select(SOLD, SOLD_TO, SOLD_BY, LIST_PRICE, SOLD_PRICE)
         .first()
     );
