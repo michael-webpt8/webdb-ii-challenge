@@ -4,6 +4,11 @@ const db = require('../utils/db');
 
 const router = express.Router();
 
+/**
+ * GET
+ * Endpoint: `/cars/:id/sales`
+ * description: get sales data off where id matches
+ */
 router.get('/:id/sales', async (req, res, next) => {
   try {
     res.json(
