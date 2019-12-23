@@ -48,7 +48,7 @@ router.post('/', async (req, res, next) => {
       model: req.body.model,
       mileage: req.body.mileage,
       transmission_type: req.body.transmission_type || null,
-      title_status: req.body.title_status || null
+      title_status: req.body.title_status || null,
     });
     const newCar = await db('cars')
       .where({ id: ids[0] })
@@ -67,7 +67,7 @@ router.post('/', async (req, res, next) => {
  * INSERT INTO `cars` (value...name) VALUES (...value...names);
  * SELECT * FROM `cars` WHERE id = (promise id) LIMIT 1;
  */
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', validateId, async (req, res, next) => {
   try {
     const payload = {
       vin: req.body.vin,
@@ -75,7 +75,7 @@ router.put('/:id', async (req, res, next) => {
       model: req.body.model,
       mileage: req.body.mileage,
       transmission_type: req.body.transmission_type || null,
-      title_status: req.body.title_status || null
+      title_status: req.body.title_status || null,
     };
 
     await db('cars')
@@ -107,7 +107,7 @@ router.put('/:id', async (req, res, next) => {
  * Endpoint: `/cars/:id`
  * description: delete selected item from cars
  */
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', validateId, async (req, res, next) => {
   try {
     await db('cars')
       .where('id', req.params.id)
@@ -118,5 +118,20 @@ router.delete('/:id', async (req, res, next) => {
     next(err);
   }
 });
+
+async function validateId(req, res, next) {
+  try {
+    const car = await db('cars')
+      .where({ id: req.params.id })
+      .first();
+    if (car) {
+      next();
+    } else {
+      res.status(404).json({ message: '404 page not found...' });
+    }
+  } catch (err) {
+    next(err);
+  }
+}
 
 module.exports = router;
