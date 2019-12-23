@@ -39,7 +39,7 @@ router.get('/:id/sales', async (req, res, next) => {
  * POST / CREATE
  * Endpoint: `/cars/:id/sales`
  */
-router.post('/:id/sales', async (req, res, next) => {
+router.post('/:salesId/sales', async (req, res, next) => {
   try {
     const payload = {
       sold: req.body.sold,
@@ -50,7 +50,7 @@ router.post('/:id/sales', async (req, res, next) => {
     };
 
     const [id] = await db('sales')
-      .where({ sales_id: req.params.sales_id })
+      .where({ sales_id: req.params.salesId })
       .insert(payload);
     res.status(201).json(
       await db('sales')
