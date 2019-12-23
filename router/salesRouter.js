@@ -18,17 +18,19 @@ const router = express.Router();
  * Endpoint   : `/cars/:id/sales`
  * description: get sales data off where id matches
  */
-router.get('/:id/sales', async (req, res, next) => {
+router.get('/:salesId/sales', async (req, res, next) => {
   try {
     res.json(
-      await db('sales').select(
-        'sales_id', // just sticking in right now for testing.
-        { sold: SOLD }, // `SOLD as sold`
-        { Seller: SOLD_BY }, // `sold_by as Seller`
-        { Purchaser: SOLD_TO }, // `sold_to as Buyer`
-        { ListingPrice: LIST_PRICE }, // `list_price as ListingPrice`
-        { PriceSoldAt: SOLD_PRICE } // `sold_price as PriceSoldAt`
-      )
+      await db('sales')
+        .where({ sales_id: req.params.salesId }) // not sure if working
+        .select(
+          'sales_id', // just sticking in right now for testing.
+          { sold: SOLD }, // `SOLD as sold`
+          { Seller: SOLD_BY }, // `sold_by as Seller`
+          { Purchaser: SOLD_TO }, // `sold_to as Buyer`
+          { ListingPrice: LIST_PRICE }, // `list_price as ListingPrice`
+          { PriceSoldAt: SOLD_PRICE } // `sold_price as PriceSoldAt`
+        )
     );
   } catch (err) {
     next(err);
