@@ -88,4 +88,16 @@ router.put('/:salesId/sales', async (req, res, next) => {
   }
 });
 
+router.delete('/:salesId/sales', async (req, res, next) => {
+  try {
+    const { salesId } = req.params;
+    await db('sales')
+      .where({ salesId })
+      .del();
+    res.status(204);
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
